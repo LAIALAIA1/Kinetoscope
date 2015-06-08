@@ -143,9 +143,9 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             this.coordinateMapper = this.kinectSensor.CoordinateMapper;
 
             //create the screen projector
-            Vector3D cameraWorldSpace = new Vector3D(0.4,0.585,-0.08);
+            Vector3D cameraWorldSpace = new Vector3D(0.4,0.755,0.03);
             Vector3D kinectWorldSpace = new Vector3D(0.4,0.045,1.56);
-            Vector3D topLeftScreenWorldSpace = new Vector3D(1.005,0.785,1.29);
+            Vector3D topLeftScreenWorldSpace = new Vector3D(1.002,0.785,1.29);
             CalibrationOptions options = new CalibrationOptions(cameraWorldSpace, kinectWorldSpace, topLeftScreenWorldSpace, 0.68, 1.21, 1920, 1080);
             this.screenMapper = new ScreenProjector(options);
 
@@ -344,7 +344,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
                         if (body.IsTracked)
                         {
-                            this.DrawClippedEdges(body, dc);
+                            //this.DrawClippedEdges(body, dc);
 
                             IReadOnlyDictionary<JointType, Joint> joints = body.Joints;
 
@@ -367,8 +367,11 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
                             this.DrawBody(joints, jointPoints, dc, drawPen);
 
-                            this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc);
-                            this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc);
+                            //this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc);
+                            //this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc);
+
+                            BitmapImage head = new BitmapImage(new Uri(@"C:/skeleton-head.png"));
+                            //this.DrawImage(jointPoints[JointType.Head], jointPoints[JointType.Neck], head, dc); //draw head
                         }
                     }
 
@@ -486,6 +489,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                     break;
             }
         }
+
 
         /// <summary>
         /// Draws indicators to show which edges are clipping body data
