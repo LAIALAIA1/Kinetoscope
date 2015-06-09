@@ -321,7 +321,6 @@ public class AvatarController : MonoBehaviour
 				if(verticalMovement)
 				{
 					yRelToAvatar = (trans.y - cameraPos.y) - (hipCenterPos - bodyRootPos).magnitude;
-					yRelToAvatar = -kinectManager.sensorHeight;
 				}
 				else
 				{
