@@ -306,7 +306,8 @@ public class AvatarController : MonoBehaviour
 		{
 			offsetCalibrated = true;
 
-			xOffset = !mirroredMovement ? trans.x * moveRate : -trans.x * moveRate;
+			//xOffset = !mirroredMovement ? trans.x * moveRate : -trans.x * moveRate;
+			xOffset = mirroredMovement ? trans.x * moveRate : -trans.x * moveRate; //remove mirror for offset x node
 			yOffset =  trans.y * moveRate;
 			zOffset = !mirroredMovement ? -trans.z : trans.z;  // -trans.z * moveRate;
 
