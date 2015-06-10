@@ -1320,7 +1320,8 @@ public class KinectManager : MonoBehaviour
 
 			//create the transform matrix - kinect to world
 			Quaternion quatTiltAngle = Quaternion.Euler(-sensorAngle, 0.0f, 0.0f);
-			kinectToWorld.SetTRS(new Vector3(0.0f, sensorHeight, 0.0f), quatTiltAngle, Vector3.one);
+			//kinectToWorld.SetTRS(new Vector3(0.0f, sensorHeight, 0.0f), quatTiltAngle, Vector3.one);
+			kinectToWorld.SetTRS(new Vector3(0.0f, 0.0f, 0.0f), quatTiltAngle, Vector3.one); //in our case we don't want the bodies to be translated in y coordinates
 		}
 		catch(DllNotFoundException ex)
 		{
@@ -1914,7 +1915,9 @@ public class KinectManager : MonoBehaviour
 
 			// update the kinect to world matrix
 			Quaternion quatTiltAngle = Quaternion.Euler(-sensorAngle, 0.0f, 0.0f);
-			kinectToWorld.SetTRS(new Vector3(0.0f, sensorHeight, 0.0f), quatTiltAngle, Vector3.one);
+			//kinectToWorld.SetTRS(new Vector3(0.0f, sensorHeight, 0.0f), quatTiltAngle, Vector3.one);
+			kinectToWorld.SetTRS(new Vector3(0.0f, 0.0f, 0.0f), quatTiltAngle, Vector3.one); //in our case we don't want the bodies to be translated in y
+
 		}
 
 

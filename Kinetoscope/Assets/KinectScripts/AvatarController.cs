@@ -300,6 +300,7 @@ public class AvatarController : MonoBehaviour
 		
         // Get the position of the body and store it.
 		Vector3 trans = kinectManager.GetUserPosition(UserID);
+		//Debug.Log ("User Pos" + trans.ToString ());
 
 		// If this is the first time we're moving the avatar, set the offset. Otherwise ignore it.
 		if (!offsetCalibrated)
@@ -326,7 +327,6 @@ public class AvatarController : MonoBehaviour
 				{
 					yRelToAvatar = bodyRootPos.y - cameraPos.y;
 				}
-				Debug.Log("Y Rel" + yRelToAvatar);
 
 				Vector3 relativePos = new Vector3(trans.x, yRelToAvatar, trans.z);
 				Vector3 newBodyRootPos = cameraPos + relativePos;
@@ -346,6 +346,10 @@ public class AvatarController : MonoBehaviour
 				}
 
 				bodyRootPosition = newBodyRootPos;
+			}
+			else
+			{
+				Debug.Log("PROBLEMS");
 			}
 		}
 	
