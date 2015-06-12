@@ -346,6 +346,20 @@ public class KinectInterop
 		public Vector3 direction;
 		public Quaternion normalRotation;
 		public Quaternion mirroredRotation;
+
+		public JointData clone()
+		{
+			JointData clone = new JointData ();
+			clone.jointType = jointType;
+			clone.trackingState = trackingState;
+			clone.kinectPos = kinectPos;
+			clone.position = position;
+			clone.orientation = orientation;
+			clone.direction = direction;
+			clone.normalRotation = normalRotation;
+			clone.mirroredRotation = mirroredRotation;
+			return clone;
+		}
     }
 	
 	public struct BodyData
@@ -396,6 +410,45 @@ public class KinectInterop
         public uint dwClippedEdges;
         public short bIsTracked;
 		public short bIsRestricted;
+
+		public BodyData clone()
+		{
+			BodyData clone = new BodyData ();
+			clone.liTrackingID = liTrackingID;
+			clone.position = position;
+			clone.orientation = orientation;  // deprecated
+			
+			clone.joint = new JointData[joint.Length];
+			for (int i = 0; i < joint.Length; i++) {
+				clone.joint[i] = joint[i].clone();
+			}
+			
+			// KM calculated parameters
+			clone.normalRotation = normalRotation;
+			clone.mirroredRotation = mirroredRotation;
+			
+			clone.hipsDirection = hipsDirection;
+			clone.shouldersDirection = shouldersDirection;
+			clone.bodyTurnAngle = bodyTurnAngle;
+			clone.bodyFullAngle = bodyFullAngle;
+			clone.isTurnedAround = isTurnedAround;
+			clone.turnAroundFactor = turnAroundFactor;
+			
+			clone.leftHandOrientation = leftHandOrientation;
+			clone.rightHandOrientation = rightHandOrientation;
+			
+			clone.headOrientation = headOrientation;
+
+			clone.leftHandState = leftHandState;
+			clone.leftHandConfidence = leftHandConfidence;
+			clone.rightHandState = rightHandState;
+			clone.rightHandConfidence = rightHandConfidence;
+			
+			clone.dwClippedEdges = dwClippedEdges;
+			clone.bIsTracked = bIsTracked;
+			clone.bIsRestricted = bIsRestricted;
+			return clone;
+		}
     }
 	
     public struct BodyFrameData
@@ -420,6 +473,19 @@ public class KinectInterop
 				bodyData[i].rightHandOrientation = Quaternion.identity;
 				bodyData[i].headOrientation = Quaternion.identity;
 			}
+		}
+
+		public BodyFrameData clone()
+		{
+			BodyFrameData clone = new BodyFrameData (bodyData.Length, bodyData[0].joint.Length);
+			clone.liRelativeTime = liRelativeTime;
+			clone.floorClipPlane = floorClipPlane;
+
+			for (int i = 0; i < bodyData.Length; i++) 
+			{
+				clone.bodyData[i] = bodyData[i].clone();
+			}
+			return clone;
 		}
     }
 	
