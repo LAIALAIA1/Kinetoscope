@@ -136,15 +136,26 @@ public class KinectManager : MonoBehaviour
 	private KinectInterop.BodyFrameData bodyFrame;
 	//private Int64 lastBodyFrameTime = 0;
 
+
+	//playback attributes
 	public bool enablePlaybackMode = false;
 	public int bodyFrameBufferSize = 10000;
 	public bool enableReversePlayback = false;
+	public float timeToWaitBeforePlayback = 30.0f;
+	public float timeBetweenTwoPlayback = 3.0f;
 	private int bodyFrameCount = 0;
 	private KinectInterop.BodyFrameData[] bodyFrameBuffer;
-	private bool isRecording = false;
 	private bool isBodyFrameBufferInitialized = false;
-	private int incrementReaderIndexValue = -1;
+	private int incrementReaderIndexValue = -1; // start with -1 cause it's updated at first read
 	private int playBackStreamReaderIndex = 0;
+	private PlaybackState actualPlaybackState = PlaybackState.None;
+	private float startWaitingTime = 0.0f;
+	private float lastPlayTime = 0.0f;
+
+	public enum PlaybackState
+	{
+		Recording,Waiting,Playing, None
+	}
 
 	
 	// List of all users
@@ -1908,16 +1919,55 @@ public class KinectManager : MonoBehaviour
 		
 	}
 
-	private bool shouldRecord()
+	private void updatePlaybackState()
 	{
-		bool shouldRecord = false;
+		bool isSomeoneTracked = false;
 		for (int i = 0; i < bodyFrame.bodyData.Length; i++) {
-			if(bodyFrame.bodyData[i].bIsTracked != 0 && bodyFrame.bodyData[i].position.z > minUserDistance)
-				return true;
+			if (bodyFrame.bodyData [i].bIsTracked != 0 && bodyFrame.bodyData [i].position.z > minUserDistance) {
+				resetIfRequired ();
+				startWaitingTime = Time.time;
+				actualPlaybackState = PlaybackState.Recording;
+				isSomeoneTracked = true;
+			}
 		}
-		return false;
+
+		if (actualPlaybackState != PlaybackState.None) {
+			if(isPlaybackRecording() && !isSomeoneTracked)
+			{
+				actualPlaybackState = PlaybackState.Waiting;
+			}
+
+			if(isPlaybackWaiting() && startWaitingTime + timeToWaitBeforePlayback < Time.time)
+			{
+				actualPlaybackState = PlaybackState.Playing;
+			}
+		}
 	}
-	
+
+	private void resetIfRequired ()
+	{
+		if (!isPlaybackRecording ()) {
+			bodyFrameCount = 0;
+			playBackStreamReaderIndex = 0;
+			incrementReaderIndexValue = -1;
+		}
+	}
+
+	private bool isPlaybackPlaying()
+	{
+		return actualPlaybackState == PlaybackState.Playing;
+	}
+
+	private bool isPlaybackRecording()
+	{
+		return actualPlaybackState == PlaybackState.Recording;
+	}
+
+	private bool isPlaybackWaiting()
+	{
+		return actualPlaybackState == PlaybackState.Waiting;
+	}
+
 	// Processes body frame data
 	private void ProcessBodyFrameData()
 	{
@@ -1954,10 +2004,10 @@ public class KinectManager : MonoBehaviour
 
 
 		int trackedUsers = 0;
-		isRecording = shouldRecord();
+		updatePlaybackState (); //update the playback system state
 
-		if (enablePlaybackMode && isBodyFrameBufferInitialized && !isRecording) {
-			if(bodyFrameCount > 0 && bodyFrameCount < bodyFrameBufferSize)
+		if (enablePlaybackMode && isBodyFrameBufferInitialized && isPlaybackPlaying()) {
+			if(bodyFrameCount > 0 && bodyFrameCount < bodyFrameBufferSize && lastPlayTime + timeBetweenTwoPlayback < Time.time)
 			{
 				if(!enableReversePlayback)
 				{
@@ -1966,12 +2016,12 @@ public class KinectManager : MonoBehaviour
 				}
 				else
 				{
-					Debug.Log("before " + playBackStreamReaderIndex + "   " + incrementReaderIndexValue);
 					if(playBackStreamReaderIndex % (bodyFrameCount - 1) == 0) incrementReaderIndexValue *= -1;
 					playBackStreamReaderIndex += incrementReaderIndexValue;
-					Debug.Log(playBackStreamReaderIndex + "   " + incrementReaderIndexValue);
 					bodyFrame = bodyFrameBuffer [playBackStreamReaderIndex].clone();
 				}
+
+				if(playBackStreamReaderIndex == 0) lastPlayTime = Time.time;
 			}
 		}
 
@@ -2221,10 +2271,10 @@ public class KinectManager : MonoBehaviour
 			}
 		}
 
-		if (isRecording && enablePlaybackMode) {
+		if (isPlaybackRecording() && bodyFrameCount < (bodyFrameBufferSize - 1) && enablePlaybackMode) {
 			bodyFrameBuffer [bodyFrameCount] = bodyFrame.clone();
-			bodyFrameCount = ++bodyFrameCount % bodyFrameBufferSize;
-			Debug.Log("increment");
+			bodyFrameCount++;
+			Debug.Log("BODYFRAMECOUNT: " + bodyFrameCount);
 		} 
 
 
@@ -2247,7 +2297,7 @@ public class KinectManager : MonoBehaviour
 				Int64 userId = addedUsers[i];
 				int userIndex = addedIndexes[i];
 
-				CalibrateUser(userId, userIndex, isRecording);
+				CalibrateUser(userId, userIndex);
 			}
 			
 			addedUsers.Clear();
@@ -2256,7 +2306,7 @@ public class KinectManager : MonoBehaviour
 	}
 	
 	// Adds UserId to the list of users
-    void CalibrateUser(Int64 userId, int bodyIndex, bool isRecording)
+    void CalibrateUser(Int64 userId, int bodyIndex)
     {
 		if(!alUserIds.Contains(userId))
 		{

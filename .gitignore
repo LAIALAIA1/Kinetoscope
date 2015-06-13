@@ -210,6 +210,7 @@ FakesAssemblies/
 *.userprefs
 *.pidb
 *.booproj
+*.stamp
 
 # Unity3D generated meta files
 *.pidb.meta
