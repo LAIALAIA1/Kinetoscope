@@ -11,10 +11,13 @@ public class NetworkManager : MonoBehaviour {
 	void Start () {
 		LoadConfigurations.Configurations configs = GameObject.Find("ConfigurationsManager").GetComponent<LoadConfigurations>().LoadedConfigs;
 		if (null != configs) {
-			ipAddress = configs.IpAddress;
-			port = configs.Port;
-			Debug.Log (ipAddress + " - " + configs.Port);
-			StartCoroutine (ConnectionRoutine ());
+			if(configs.IsNetworkEnabled)
+			{
+				ipAddress = configs.IpAddress;
+				port = configs.Port;
+				Debug.Log (ipAddress + " - " + configs.Port);
+				StartCoroutine (ConnectionRoutine ());
+			}
 		}
 	}
 
@@ -41,8 +44,6 @@ public class NetworkManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (isConnected) {
 
-		}
 	}
 }

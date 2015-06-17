@@ -347,10 +347,6 @@ public class AvatarController : MonoBehaviour
 
 				bodyRootPosition = newBodyRootPos;
 			}
-			else
-			{
-				Debug.Log("PROBLEMS");
-			}
 		}
 	
 		// Smoothly transition to the new position

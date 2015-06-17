@@ -434,6 +434,38 @@ public class KinectManager : MonoBehaviour
 		
 		return Vector3.zero;
 	}
+
+	public Vector3 GetObservatorPointOfView()
+	{
+		//if the playback system is not playing
+		if (actualPlaybackState != PlaybackState.Playing) 
+		{
+			Vector3 ObservatorPointOfView = Vector3.zero;
+			KinectInterop.BodyData bodyData;
+			int meanCount = 0;
+			for (int i = 0; i < sensorData.bodyCount; i++) 
+			{
+				bodyData = bodyFrame.bodyData [i];
+				if (bodyData.joint [(int)KinectInterop.JointType.Head].trackingState != KinectInterop.TrackingState.NotTracked) {
+					ObservatorPointOfView += bodyData.joint [(int)KinectInterop.JointType.Head].position;
+					meanCount++;
+				}
+			}
+			if (meanCount > 0) 
+			{
+				return ObservatorPointOfView /= meanCount;
+			}
+		} 
+		else 
+		{
+			LoadConfigurations.Configurations config = GameObject.Find("ConfigurationsManager").GetComponent<LoadConfigurations>().LoadedConfigs;
+			if(null != config)
+			{
+				return config.ObservatorPosition;
+			}
+		}
+		return new Vector3 (0.0f, 1.7f, 3.0f);
+	}
 	
 	// returns the User rotation, relative to the Kinect-sensor
 	public Quaternion GetUserOrientation(Int64 userId, bool flip)
@@ -2271,7 +2303,6 @@ public class KinectManager : MonoBehaviour
 		if (isPlaybackRecording() && bodyFrameCount < (bodyFrameBufferSize - 1) && enablePlaybackMode) {
 			bodyFrameBuffer [bodyFrameCount] = bodyFrame.clone();
 			bodyFrameCount++;
-			Debug.Log("BODYFRAMECOUNT: " + bodyFrameCount);
 		} 
 
 
