@@ -428,8 +428,6 @@ public class KinectManager : MonoBehaviour
 			if(index >= 0 && index < sensorData.bodyCount && 
 				bodyFrame.bodyData[index].bIsTracked != 0)
 			{
-				//Debug.Log("YOLO" + bodyFrame.bodyData[index].position.ToString());
-				//Debug.Log("YOLO2" + bodyFrame.bodyData[index].joint[GetJointIndex(KinectInterop.JointType.FootLeft)].position.ToString());
 				return bodyFrame.bodyData[index].position;
 			}
 		}
@@ -944,7 +942,6 @@ public class KinectManager : MonoBehaviour
 		if (enablePlaybackMode) {
 			bodyFrameBuffer = new KinectInterop.BodyFrameData[bodyFrameBufferSize];
 			isBodyFrameBufferInitialized = true;
-			Debug.Log("ADAKISJDOAHSIHDNAOIS");
 		}
 	}
 	

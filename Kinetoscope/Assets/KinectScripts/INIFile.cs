@@ -74,6 +74,9 @@ namespace INI
 		public static INIValues ObservatorX { get { return new INIValues("observatorx"); } }
 		public static INIValues ObservatorY { get { return new INIValues("observatory"); } }
 		public static INIValues ObservatorZ { get { return new INIValues("observatorz"); } }
-		
+
+		//network
+		public static INIValues IpAddress { get { return new INIValues("ipaddress"); } }
+		public static INIValues Port { get { return new INIValues("port"); } }
 	}
 }
