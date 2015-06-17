@@ -3,9 +3,12 @@ using System.Collections;
 
 public class NetworkManager : MonoBehaviour {
 
+	public GameObject observatorEyes;
+
 	private string ipAddress = "127.0.0.1";
 	private int port = 5555;
 	private bool isConnected = false;
+	private bool isObservatorInstantiated = false;
 	private readonly int NB_ATTEMPS = 30;
 	private int currentAttempt = 0;
 
@@ -34,10 +37,19 @@ public class NetworkManager : MonoBehaviour {
 		}
 	}
 
+	private IEnumerator CreateObservatorEyesOnOtherClient()
+	{
+		yield return new WaitForSeconds (15);
+		Network.Instantiate (observatorEyes,new Vector3(0f,0f,0f),Quaternion.identity,0);
+		Debug.Log ("instantiated");
+	}
+
 	private void OnConnectedToServer()
 	{
 		//a client just joigned the server
 		isConnected = true;
+		StartCoroutine (CreateObservatorEyesOnOtherClient ());
+		Debug.Log ("CONNECTED MODAFUCKAH");
 	}
 
 	private void OnDisconnectedToServer()
