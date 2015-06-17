@@ -10,9 +10,14 @@ public class UpdateEyesPosition : MonoBehaviour {
 		manager = Camera.main.GetComponent<KinectManager> ();
 	}
 	// Update is called once per frame
+
 	void Update () {
-		if (null != manager) {
-			transform.position = manager.GetObservatorPointOfView();
-		}
+		GetComponent<NetworkView> ().RPC ("UpdateObservatorEyesPosition", RPCMode.Others,manager.GetObservatorPointOfView());
+	}
+
+	[RPC]
+	void UpdateObservatorEyesPosition(Vector3 position)
+	{
+		transform.position = position;
 	}
 }
