@@ -7,7 +7,6 @@ public class LoadConfigurations : MonoBehaviour {
 
 	public Text errorText;
 	public Configurations loadedConfigs;
-	public bool enableNetworkCommunication = false;
 
 	/***
 	 * private attributes
@@ -78,7 +77,10 @@ public class LoadConfigurations : MonoBehaviour {
 
 	private void LoadNetworkConfigs()
 	{
-		if (enableNetworkCommunication) 
+		int isNetworkEnabled = 0;
+		int.TryParse (iniConfigs.IniReadValue (NETWORK_SECTION, INIValues.IsNetworkEnabled.Value),out isNetworkEnabled);
+		loadedConfigs.IsNetworkEnabled = isNetworkEnabled > 0;
+		if (loadedConfigs.IsNetworkEnabled) 
 		{
 			string ipAddress;
 			int port = 0, isServer = 0;
@@ -97,7 +99,6 @@ public class LoadConfigurations : MonoBehaviour {
 				isNetworkLoaded = false;
 			}
 		}
-		loadedConfigs.IsNetworkEnabled = enableNetworkCommunication;
 	}
 
 	void Update()

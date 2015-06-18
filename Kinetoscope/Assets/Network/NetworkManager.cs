@@ -41,29 +41,20 @@ public class NetworkManager : MonoBehaviour {
 			if(currentAttempt > NB_ATTEMPS) break;
 		}
 	}
-
-	private IEnumerator CreateObservatorEyesOnOtherClient()
-	{
-		yield return new WaitForSeconds (2);
-		networkedObservatorEyes = Network.Instantiate (observatorEyes,manager.GetObservatorPointOfView(),Quaternion.identity,0) as GameObject;
-		Debug.Log (networkedObservatorEyes.transform.position.ToString());
-		isObservatorInstantiated = true;
-	}
+	
 
 	private void OnConnectedToServer()
 	{
 		//a client just joigned the server
 		isConnected = true;
-		if (!isObservatorInstantiated) {
-			StartCoroutine (CreateObservatorEyesOnOtherClient ());
-		}
+		InstanciateObservatorEyesGameObject ();
 	}
 
 	private void OnServerInitialized()
 	{
 		isConnected = true;
+		InstanciateObservatorEyesGameObject ();
 		Debug.Log ("Server initialized");
-		networkedObservatorEyes = Network.Instantiate (observatorEyes,manager.GetObservatorPointOfView(),Quaternion.identity,0) as GameObject;
 	}
 
 	private void OnDisconnectedToServer()
@@ -71,6 +62,19 @@ public class NetworkManager : MonoBehaviour {
 		//The connection has been lost or closed
 		isConnected = false;
 		Destroy (observatorEyes);
+	}
+
+	private void InstanciateObservatorEyesGameObject ()
+	{
+		if (!isObservatorInstantiated) 
+		{
+			networkedObservatorEyes = Network.Instantiate (observatorEyes, manager.GetObservatorPointOfView (), Quaternion.identity, 0) as GameObject;
+			if (Network.isServer)
+				networkedObservatorEyes.name = "serverObservator";
+			else
+				networkedObservatorEyes.name = "clientObservator";
+			isObservatorInstantiated = true;
+		}
 	}
 	
 	// Update is called once per frame
