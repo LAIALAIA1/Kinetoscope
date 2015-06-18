@@ -4,7 +4,7 @@ using System.Collections;
 public class NetworkManager : MonoBehaviour {
 
 	public GameObject observatorEyes;
-	public Transform networkedObservatorEyes;
+	public GameObject networkedObservatorEyes;
 
 	private string ipAddress = "127.0.0.1";
 	private int port = 5555;
@@ -12,17 +12,21 @@ public class NetworkManager : MonoBehaviour {
 	private bool isObservatorInstantiated = false;
 	private readonly int NB_ATTEMPS = 30;
 	private int currentAttempt = 0;
+	private KinectManager manager;
 
 	// Use this for initialization
 	void Start () {
+		manager = Camera.main.GetComponent<KinectManager> ();
 		LoadConfigurations.Configurations configs = GameObject.Find("ConfigurationsManager").GetComponent<LoadConfigurations>().LoadedConfigs;
 		if (null != configs) {
 			if(configs.IsNetworkEnabled)
 			{
 				ipAddress = configs.IpAddress;
 				port = configs.Port;
-				Debug.Log (ipAddress + " - " + configs.Port);
-				StartCoroutine (ConnectionRoutine ());
+				if(!configs.isServer)
+					StartCoroutine (ConnectionRoutine ());
+				else
+					Network.InitializeServer(4,port,false);
 			}
 		}
 	}
@@ -40,10 +44,9 @@ public class NetworkManager : MonoBehaviour {
 
 	private IEnumerator CreateObservatorEyesOnOtherClient()
 	{
-		yield return new WaitForSeconds (15);
-		networkedObservatorEyes = Network.Instantiate (observatorEyes,new Vector3(0f,0f,0f),Quaternion.identity,0) as Transform;
-		networkedObservatorEyes.position += Vector3.up;
-		Debug.Log ("instantiated");
+		yield return new WaitForSeconds (2);
+		networkedObservatorEyes = Network.Instantiate (observatorEyes,manager.GetObservatorPointOfView(),Quaternion.identity,0) as GameObject;
+		Debug.Log (networkedObservatorEyes.transform.position.ToString());
 		isObservatorInstantiated = true;
 	}
 
@@ -53,8 +56,14 @@ public class NetworkManager : MonoBehaviour {
 		isConnected = true;
 		if (!isObservatorInstantiated) {
 			StartCoroutine (CreateObservatorEyesOnOtherClient ());
-			Debug.Log ("CONNECTED MODAFUCKAH");
 		}
+	}
+
+	private void OnServerInitialized()
+	{
+		isConnected = true;
+		Debug.Log ("Server initialized");
+		networkedObservatorEyes = Network.Instantiate (observatorEyes,manager.GetObservatorPointOfView(),Quaternion.identity,0) as GameObject;
 	}
 
 	private void OnDisconnectedToServer()

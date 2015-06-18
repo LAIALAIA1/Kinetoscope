@@ -13,5 +13,5 @@ public class UpdateEyesPosition : MonoBehaviour {
 	void Update () {
 		transform.position = manager.GetObservatorPointOfView ();
 	}
-	
+
 }

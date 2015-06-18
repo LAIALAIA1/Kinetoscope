@@ -78,5 +78,6 @@ namespace INI
 		//network
 		public static INIValues IpAddress { get { return new INIValues("ipaddress"); } }
 		public static INIValues Port { get { return new INIValues("port"); } }
+		public static INIValues IsServer { get { return new INIValues("isserver"); } }
 	}
 }

@@ -85,7 +85,7 @@ public class LoadConfigurations : MonoBehaviour {
 			ipAddress = iniConfigs.IniReadValue(NETWORK_SECTION, INIValues.IpAddress.Value);
 
 			if(ipAddress.Length > 0 && int.TryParse(iniConfigs.IniReadValue(NETWORK_SECTION,INIValues.Port.Value),out port)
-			   && int.TryParse(iniConfigs.IniReadValue(NETWORK_SECTION,INIValues.Port.Value),out isServer))
+			   && int.TryParse(iniConfigs.IniReadValue(NETWORK_SECTION,INIValues.IsServer.Value),out isServer))
 			{
 				loadedConfigs.IpAddress = ipAddress;
 				loadedConfigs.Port = port;
