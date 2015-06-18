@@ -453,6 +453,7 @@ public class KinectManager : MonoBehaviour
 			}
 			if (meanCount > 0) 
 			{
+				ObservatorPointOfView.x *= -1; //mirrored x coordinate;
 				return ObservatorPointOfView /= meanCount;
 			}
 		} 

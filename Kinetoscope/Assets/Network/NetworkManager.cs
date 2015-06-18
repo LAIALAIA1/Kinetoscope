@@ -6,6 +6,7 @@ public class NetworkManager : MonoBehaviour {
 	public GameObject observatorEyes;
 	public GameObject networkedObservatorEyes;
 
+	private LoadConfigurations.Configurations configs = null;
 	private string ipAddress = "127.0.0.1";
 	private int port = 5555;
 	private bool isConnected = false;
@@ -17,7 +18,7 @@ public class NetworkManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		manager = Camera.main.GetComponent<KinectManager> ();
-		LoadConfigurations.Configurations configs = GameObject.Find("ConfigurationsManager").GetComponent<LoadConfigurations>().LoadedConfigs;
+		configs = GameObject.Find("ConfigurationsManager").GetComponent<LoadConfigurations>().LoadedConfigs;
 		if (null != configs) {
 			if(configs.IsNetworkEnabled)
 			{

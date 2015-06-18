@@ -80,5 +80,13 @@ namespace INI
 		public static INIValues IpAddress { get { return new INIValues("ipaddress"); } }
 		public static INIValues Port { get { return new INIValues("port"); } }
 		public static INIValues IsServer { get { return new INIValues("isserver"); } }
+
+		//domain conversion
+		public static INIValues RotationAngle { get { return new INIValues("rotationangle"); } }
+		public static INIValues TranslationX { get { return new INIValues("translationx"); } }
+		public static INIValues TranslationY { get { return new INIValues("translationy"); } }
+		public static INIValues TranslationZ { get { return new INIValues("translationz"); } }
+
+		
 	}
 }

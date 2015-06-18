@@ -16,9 +16,11 @@ public class LoadConfigurations : MonoBehaviour {
 	private readonly string CALIBRATION_SECTION = "calibration"; //calibration section string
 	private readonly string OBSERVATOR_SECTION = "observator"; //observator section string
 	private readonly string NETWORK_SECTION = "network";
+	private readonly string DOMAIN_SECTION = "domainconversion";
 	private bool isCalibrationLoaded = false;
 	private bool isObservatorLoaded = false;
-	private bool isNetworkLoaded = true; // true because we're not forced to use network communication
+	private bool isNetworkLoaded = true; // true because we're not forced to use network communication and there's no error if we don't want to
+	private bool isDomainConversionParamsLoaded = true;
 	private bool isConfigurationLoadingSuccess = false;
 	private float time = 0.0f;
 	private readonly float DISPLAY_TIME = 10.0f;
@@ -37,8 +39,9 @@ public class LoadConfigurations : MonoBehaviour {
 		LoadCalibrationConfigs ();
 		LoadObservatorConfigs ();
 		LoadNetworkConfigs ();
+		LoadDomainConversionParams ();
 
-		if (!isCalibrationLoaded || !isObservatorLoaded || !isNetworkLoaded) {
+		if (!isCalibrationLoaded || !isObservatorLoaded || !isNetworkLoaded || !isDomainConversionParamsLoaded) {
 			errorText.enabled = true;
 			time = Time.time;
 		} 
@@ -51,7 +54,12 @@ public class LoadConfigurations : MonoBehaviour {
 	private void LoadCalibrationConfigs ()
 	{
 		float screenWidth = 0, screenHeight = 0, screenCenterX = 0, screenCentery = 0, screenCenterZ = 0;
-		if (float.TryParse (iniConfigs.IniReadValue (CALIBRATION_SECTION, INIValues.ScreenWidth.Value), out screenWidth) && float.TryParse (iniConfigs.IniReadValue (CALIBRATION_SECTION, INIValues.ScreenHeight.Value), out screenHeight) && float.TryParse (iniConfigs.IniReadValue (CALIBRATION_SECTION, INIValues.ScreenCenterX.Value), out screenCenterX) && float.TryParse (iniConfigs.IniReadValue (CALIBRATION_SECTION, INIValues.ScreenCenterY.Value), out screenCentery) && float.TryParse (iniConfigs.IniReadValue (CALIBRATION_SECTION, INIValues.ScreenCenterZ.Value), out screenCenterZ)) {
+		if (float.TryParse (iniConfigs.IniReadValue (CALIBRATION_SECTION, INIValues.ScreenWidth.Value), out screenWidth) && 
+		    float.TryParse (iniConfigs.IniReadValue (CALIBRATION_SECTION, INIValues.ScreenHeight.Value), out screenHeight) && 
+		    float.TryParse (iniConfigs.IniReadValue (CALIBRATION_SECTION, INIValues.ScreenCenterX.Value), out screenCenterX) && 
+		    float.TryParse (iniConfigs.IniReadValue (CALIBRATION_SECTION, INIValues.ScreenCenterY.Value), out screenCentery) && 
+		    float.TryParse (iniConfigs.IniReadValue (CALIBRATION_SECTION, INIValues.ScreenCenterZ.Value), out screenCenterZ)) 
+		{
 			loadedConfigs.ScreenCenter = new Vector3 (screenCenterX, screenCentery, screenCenterZ);
 			loadedConfigs.ScreenScale = new Vector3 (screenWidth / 10.0f, 1, screenHeight / 10.0f); // we divide by 10.0 because a plane object is a 10 per 10 meters object by default and its actually a scaling factor
 			isCalibrationLoaded = true;
@@ -95,12 +103,35 @@ public class LoadConfigurations : MonoBehaviour {
 			}
 			else
 			{
-				errorText.text += "Error while loading Network communication configurations";
+				errorText.text += "Error while loading Network communication configurations\n";
 				isNetworkLoaded = false;
 			}
 		}
 	}
 
+	private void LoadDomainConversionParams ()
+	{
+		if (isNetworkLoaded) 
+		{
+			float rotationAngle = 0f, translationX = 0f, translationY = 0f, translationZ = 0f;
+			if (float.TryParse (iniConfigs.IniReadValue (DOMAIN_SECTION, INIValues.RotationAngle.Value), out rotationAngle) && 
+			    float.TryParse (iniConfigs.IniReadValue (DOMAIN_SECTION, INIValues.TranslationX.Value), out translationX) && 
+			    float.TryParse (iniConfigs.IniReadValue (DOMAIN_SECTION, INIValues.TranslationY.Value), out translationY) && 
+			    float.TryParse (iniConfigs.IniReadValue (DOMAIN_SECTION, INIValues.TranslationZ.Value), out translationZ))
+			{
+				loadedConfigs.RotationAngle = rotationAngle;
+				loadedConfigs.TranlsationX = translationX;
+				loadedConfigs.TranslationY = translationY;
+				loadedConfigs.TranslationZ = translationZ;
+			}
+			else
+			{
+				errorText.text += "Error while loading domain conversion parameters";
+				isDomainConversionParamsLoaded = false;
+			}
+		}
+	}
+	
 	void Update()
 	{
 		// if the message has been displayed DISPLAY_TIME seconds
@@ -133,10 +164,16 @@ public class LoadConfigurations : MonoBehaviour {
 		public Vector3 ObservatorPosition { get; set; }
 		public Vector3 ScreenCenter { get; set; }
 		public Vector3 ScreenScale { get; set; }
+
 		public bool IsNetworkEnabled { get; set; }
 		public int Port { get; set; }
 		public string IpAddress { get; set; }
 		public bool isServer { get; set; }
+
+		public float RotationAngle { get; set; }
+		public float TranlsationX { get; set; }
+		public float TranslationY { get; set; }
+		public float TranslationZ { get; set; }
 	}
 
 }
