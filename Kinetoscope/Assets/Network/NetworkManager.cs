@@ -4,6 +4,7 @@ using System.Collections;
 public class NetworkManager : MonoBehaviour {
 
 	public GameObject observatorEyes;
+	public Transform networkedObservatorEyes;
 
 	private string ipAddress = "127.0.0.1";
 	private int port = 5555;
@@ -40,22 +41,27 @@ public class NetworkManager : MonoBehaviour {
 	private IEnumerator CreateObservatorEyesOnOtherClient()
 	{
 		yield return new WaitForSeconds (15);
-		Network.Instantiate (observatorEyes,new Vector3(0f,0f,0f),Quaternion.identity,0);
+		networkedObservatorEyes = Network.Instantiate (observatorEyes,new Vector3(0f,0f,0f),Quaternion.identity,0) as Transform;
+		networkedObservatorEyes.position += Vector3.up;
 		Debug.Log ("instantiated");
+		isObservatorInstantiated = true;
 	}
 
 	private void OnConnectedToServer()
 	{
 		//a client just joigned the server
 		isConnected = true;
-		StartCoroutine (CreateObservatorEyesOnOtherClient ());
-		Debug.Log ("CONNECTED MODAFUCKAH");
+		if (!isObservatorInstantiated) {
+			StartCoroutine (CreateObservatorEyesOnOtherClient ());
+			Debug.Log ("CONNECTED MODAFUCKAH");
+		}
 	}
 
 	private void OnDisconnectedToServer()
 	{
 		//The connection has been lost or closed
 		isConnected = false;
+		Destroy (observatorEyes);
 	}
 	
 	// Update is called once per frame

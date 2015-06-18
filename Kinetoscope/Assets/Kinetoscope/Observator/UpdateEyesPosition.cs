@@ -7,12 +7,10 @@ public class UpdateEyesPosition : MonoBehaviour {
 
 	void Start()
 	{
-		Debug.Log ("GTFO");
 		manager = Camera.main.GetComponent<KinectManager> ();
 	}
 
 	void Update () {
-		Debug.Log (manager.GetObservatorPointOfView ().ToString ());
 		transform.position = manager.GetObservatorPointOfView ();
 	}
 	
