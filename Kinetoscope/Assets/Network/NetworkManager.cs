@@ -69,6 +69,7 @@ public class NetworkManager : MonoBehaviour {
 		if (!isObservatorInstantiated) 
 		{
 			networkedObservatorEyes = Network.Instantiate (observatorEyes, manager.GetObservatorPointOfView (), Quaternion.identity, 0) as GameObject;
+			networkedObservatorEyes.AddComponent<UpdateEyesPosition>();
 			if (Network.isServer)
 				networkedObservatorEyes.name = "serverObservator";
 			else
