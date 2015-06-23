@@ -51,7 +51,7 @@
 					int depth = (int)_DepthBuffer[di];
 					float hist = 1 - (_HistBuffer[depth] / _TotalPoints);
 					
-					switch(((int)(player * 255)) % 4)
+					switch(((uint)(player * 255)) % 4)
 					{
 						case 0:
 							return float4(hist, 0, 0, 1);  // red

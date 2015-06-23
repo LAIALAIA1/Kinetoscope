@@ -3,13 +3,14 @@ using System.Collections;
 
 public class UpdateCameraPosition : MonoBehaviour {
 
+	private KinectManager manager = null;
 	private NetworkView view = null;
 	private Matrix4x4 domainConversionMatrix;
 	private LoadConfigurations.Configurations configs = null;
-	private Transform oldPos;
 
 	private void Start()
 	{
+		manager = Camera.main.GetComponent<KinectManager> ();
 		view = GetComponent<NetworkView> ();
 		configs = GameObject.Find("ConfigurationsManager").GetComponent<LoadConfigurations>().LoadedConfigs;
 		initMatrix ();
@@ -26,12 +27,17 @@ public class UpdateCameraPosition : MonoBehaviour {
 	private void initMatrix()
 	{
 		domainConversionMatrix = Matrix4x4.identity;
-		if (null != configs) 
+		if (null != configs && null != manager && null != view) 
 		{
 			Vector3 translationVector = new Vector3 (configs.TranlsationX, configs.TranslationY, configs.TranslationZ);
-			Quaternion rotQuat = Quaternion.Euler (new Vector3 (0.0f, configs.RotationAngle, 0f));
-			domainConversionMatrix.SetTRS (translationVector, rotQuat, Vector3.one);
-			Debug.Log("Matrix " + domainConversionMatrix.ToString());
+			Vector3 scaleVector = Vector3.one;
+			scaleVector.x = -1; // x and z axis are inverted between one and the other kinect
+			scaleVector.z = -1;
+			// we know that the x axis rotation value of the kinect sensor is actually store in the scaling transform vector x coordinate of the view
+			float xAxisRotOtherSensor = view.transform.localScale.x; // the final rot angle is the substraction between the other sensor angle and the current sensor angle
+			float finalXAxisRot = xAxisRotOtherSensor - - manager.sensorAngle;
+			Quaternion rotQuat = Quaternion.Euler(new Vector3(finalXAxisRot,0f,0f));
+			domainConversionMatrix.SetTRS (translationVector, rotQuat, scaleVector);
 		}
 	}
 }

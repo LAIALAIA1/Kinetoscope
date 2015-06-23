@@ -306,6 +306,7 @@ public class AvatarController : MonoBehaviour
 		if (!offsetCalibrated)
 		{
 			offsetCalibrated = true;
+			Camera.main.GetComponent<NegativeColorsMaterial>().InvertColorsForAWhile();
 
 			//xOffset = !mirroredMovement ? trans.x * moveRate : -trans.x * moveRate;
 			xOffset = mirroredMovement ? trans.x * moveRate : -trans.x * moveRate; //remove mirror for offset x node

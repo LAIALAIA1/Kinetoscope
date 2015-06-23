@@ -12,7 +12,7 @@ public class LoadConfigurations : MonoBehaviour {
 	 * private attributes
 	 ***/
 	private IniFile iniConfigs; //Ini files reader/writer object
-	private readonly string INI_PATH = @"C:/kinetoscope.ini"; //the ini file path called kinetoscope.ini
+	private string INI_PATH = ""; //the ini file path called kinetoscope.ini
 	private readonly string CALIBRATION_SECTION = "calibration"; //calibration section string
 	private readonly string OBSERVATOR_SECTION = "observator"; //observator section string
 	private readonly string NETWORK_SECTION = "network";
@@ -28,11 +28,11 @@ public class LoadConfigurations : MonoBehaviour {
 
 	// initialization
 	void Start () {
-
+		INI_PATH = Application.dataPath.ToString() + "/Configs/kinetoscope.ini";
 		Camera.main.enabled = true;
 		errorText.enabled = false;
 		errorText.text = "";
-		loadedConfigs = new Configurations ();
+		loadedConfigs = new Configurations (); //create empty configurations object
 
 		//at initialisation we will read the calibrations value and set it to our scene objects
 		iniConfigs = new IniFile (INI_PATH);
@@ -113,13 +113,11 @@ public class LoadConfigurations : MonoBehaviour {
 	{
 		if (isNetworkLoaded) 
 		{
-			float rotationAngle = 0f, translationX = 0f, translationY = 0f, translationZ = 0f;
-			if (float.TryParse (iniConfigs.IniReadValue (DOMAIN_SECTION, INIValues.RotationAngle.Value), out rotationAngle) && 
-			    float.TryParse (iniConfigs.IniReadValue (DOMAIN_SECTION, INIValues.TranslationX.Value), out translationX) && 
+			float translationX = 0f, translationY = 0f, translationZ = 0f;
+			if (float.TryParse (iniConfigs.IniReadValue (DOMAIN_SECTION, INIValues.TranslationX.Value), out translationX) && 
 			    float.TryParse (iniConfigs.IniReadValue (DOMAIN_SECTION, INIValues.TranslationY.Value), out translationY) && 
 			    float.TryParse (iniConfigs.IniReadValue (DOMAIN_SECTION, INIValues.TranslationZ.Value), out translationZ))
 			{
-				loadedConfigs.RotationAngle = rotationAngle;
 				loadedConfigs.TranlsationX = translationX;
 				loadedConfigs.TranslationY = translationY;
 				loadedConfigs.TranslationZ = translationZ;
@@ -170,7 +168,6 @@ public class LoadConfigurations : MonoBehaviour {
 		public string IpAddress { get; set; }
 		public bool isServer { get; set; }
 
-		public float RotationAngle { get; set; }
 		public float TranlsationX { get; set; }
 		public float TranslationY { get; set; }
 		public float TranslationZ { get; set; }
