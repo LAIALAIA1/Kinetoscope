@@ -10,6 +10,7 @@ public class SetScreenConfigurations : MonoBehaviour {
 			transform.localScale = configs.ScreenScale;
 			transform.position = configs.ScreenCenter;
 			transform.rotation = Quaternion.Euler (270.0f, 0.0f, 0.0f); // rotate of 270° on x axis to place the screen in front of camera
+			Debug.Log("Screen configured");
 		}
 	}
 

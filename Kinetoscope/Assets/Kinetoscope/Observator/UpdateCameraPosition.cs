@@ -16,21 +16,10 @@ public class UpdateCameraPosition : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 		if (null != view) 
 		{
-			if(!view.isMine)
-			{
-				if(null == oldPos)
-				{
-					Camera.main.transform.position = domainConversionMatrix.MultiplyVector(view.transform.position);
-				}
-				else
-				{
-					Camera.main.transform.position = Vector3.Lerp(oldPos.position, domainConversionMatrix.MultiplyVector(view.transform.position), Time.smoothDeltaTime);
-				}
-				oldPos = Camera.main.transform;
-			}
+			Camera.main.transform.position = domainConversionMatrix.MultiplyPoint3x4(view.transform.position);
 		}
 	}
 
@@ -39,11 +28,10 @@ public class UpdateCameraPosition : MonoBehaviour {
 		domainConversionMatrix = Matrix4x4.identity;
 		if (null != configs) 
 		{
-			Debug.Log(configs.RotationAngle);
 			Vector3 translationVector = new Vector3 (configs.TranlsationX, configs.TranslationY, configs.TranslationZ);
-			Quaternion rotQuat = Quaternion.Euler (new Vector3 (0f, configs.RotationAngle, 0f));
+			Quaternion rotQuat = Quaternion.Euler (new Vector3 (0.0f, configs.RotationAngle, 0f));
 			domainConversionMatrix.SetTRS (translationVector, rotQuat, Vector3.one);
+			Debug.Log("Matrix " + domainConversionMatrix.ToString());
 		}
-		Debug.Log (domainConversionMatrix.ToString ());
 	}
 }

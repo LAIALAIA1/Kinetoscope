@@ -151,6 +151,7 @@ public class KinectManager : MonoBehaviour
 	private PlaybackState actualPlaybackState = PlaybackState.None;
 	private float startWaitingTime = 0.0f;
 	private float lastPlayTime = 0.0f;
+	private LoadConfigurations.Configurations configs = null;
 
 	public enum PlaybackState
 	{
@@ -446,7 +447,7 @@ public class KinectManager : MonoBehaviour
 			for (int i = 0; i < sensorData.bodyCount; i++) 
 			{
 				bodyData = bodyFrame.bodyData [i];
-				if (bodyData.joint [(int)KinectInterop.JointType.Head].trackingState != KinectInterop.TrackingState.NotTracked) {
+				if (bodyData.joint [(int)KinectInterop.JointType.Head].trackingState == KinectInterop.TrackingState.Tracked) {
 					ObservatorPointOfView += bodyData.joint [(int)KinectInterop.JointType.Head].position;
 					meanCount++;
 				}
@@ -459,13 +460,13 @@ public class KinectManager : MonoBehaviour
 		} 
 		else 
 		{
-			LoadConfigurations.Configurations config = GameObject.Find("ConfigurationsManager").GetComponent<LoadConfigurations>().LoadedConfigs;
-			if(null != config)
+			if(null == configs)
 			{
-				return config.ObservatorPosition;
+				configs = GameObject.Find("ConfigurationsManager").GetComponent<LoadConfigurations>().LoadedConfigs;
 			}
+			return configs.ObservatorPosition;
 		}
-		return new Vector3 (0.0f, 1.7f, 3.0f);
+		return new Vector3 (0.0f, 0.8f, 3.0f);
 	}
 	
 	// returns the User rotation, relative to the Kinect-sensor
