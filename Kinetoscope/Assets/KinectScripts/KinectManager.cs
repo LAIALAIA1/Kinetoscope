@@ -51,7 +51,10 @@ public class KinectManager : MonoBehaviour
 	
 	// Maximum user distance, if any. 0 means no max-distance limitation
 	public float maxUserDistance = 0f;
-	
+
+	public float maxUserXDeporting = 0f;
+
+
 	// Maximum number of users allowed to be tracked
 	public int maxTrackedUsers = 6;
 	
@@ -448,7 +451,9 @@ public class KinectManager : MonoBehaviour
 			for (int i = 0; i < sensorData.bodyCount; i++) 
 			{
 				bodyData = bodyFrame.bodyData [i];
-				if (bodyData.joint [(int)KinectInterop.JointType.Head].trackingState == KinectInterop.TrackingState.Tracked) {
+				KinectInterop.JointData head = bodyData.joint [(int)KinectInterop.JointType.Head];
+				if (head.trackingState == KinectInterop.TrackingState.Tracked && head.position.z > minUserDistance
+				    && head.position.z < maxUserDistance && Mathf.Abs(head.position.x) < maxUserXDeporting) {
 					ObservatorPointOfView += bodyData.joint [(int)KinectInterop.JointType.Head].position;
 					meanCount++;
 				}
@@ -456,6 +461,7 @@ public class KinectManager : MonoBehaviour
 			if (meanCount > 0) 
 			{
 				ObservatorPointOfView.x *= -1; //mirrored x coordinate;
+				Debug.Log("MEAN COUNT: " + meanCount);
 				return ObservatorPointOfView /= meanCount;
 			}
 		} 
@@ -467,7 +473,7 @@ public class KinectManager : MonoBehaviour
 			}
 			return configs.ObservatorPosition;
 		}
-		return new Vector3 (0.0f, 0.8f, 3.0f);
+		return new Vector3 (0.0f, 1.0f, 3.0f);
 	}
 	
 	// returns the User rotation, relative to the Kinect-sensor
@@ -1998,7 +2004,6 @@ public class KinectManager : MonoBehaviour
 			foreach (MaterialManager manager in materialManagers) {
 				manager.SetStandardMaterial ();
 				isPlaybackStyleApplied = false;
-				Debug.Log("marc lavoine");
 			}
 		}
 	}

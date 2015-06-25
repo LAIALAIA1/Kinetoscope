@@ -99,6 +99,7 @@ public class MaterialManager : MonoBehaviour {
 		int nbOfFlickr = Random.Range (NB_MIN_FLICKR, NB_MAX_FLICKR) * 2;
 		float waitTime = 1e10f;
 		int loopCount = LOOP_START;
+		MaterialState matState = materialState;
 		bool rendererState = false;
 
 		if (null != renderer) 
@@ -116,6 +117,7 @@ public class MaterialManager : MonoBehaviour {
 				renderer.enabled = rendererState;
 			}
 			renderer.enabled = true;
+			materialState = matState;
 			SetRightMaterialToAll();
 		}
 	}
