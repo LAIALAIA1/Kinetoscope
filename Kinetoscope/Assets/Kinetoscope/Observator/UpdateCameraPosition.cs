@@ -11,7 +11,7 @@ public class UpdateCameraPosition : MonoBehaviour {
 	private void Start()
 	{
 		manager = Camera.main.GetComponent<KinectManager> ();
-		view = GetComponent<NetworkView> ();
+		view = GetComponent<NetworkView> ().isMine ? null : GetComponent<NetworkView> ();
 		configs = GameObject.Find("ConfigurationsManager").GetComponent<LoadConfigurations>().LoadedConfigs;
 		initMatrix ();
 	}
@@ -21,7 +21,6 @@ public class UpdateCameraPosition : MonoBehaviour {
 		if (null != view) {
 			Camera.main.transform.position = domainConversionMatrix.MultiplyPoint3x4 (view.transform.position);
 		} else {
-			Debug.Log("coucou");
 			Camera.main.transform.position = domainConversionMatrix.MultiplyPoint3x4 (configs.ObservatorPosition);
 		}
 	}
@@ -29,7 +28,7 @@ public class UpdateCameraPosition : MonoBehaviour {
 	private void initMatrix()
 	{
 		domainConversionMatrix = Matrix4x4.identity;
-		if (null != configs && null != manager && null != view) 
+		if (null != configs && null != manager) 
 		{
 			Vector3 translationVector = new Vector3 (configs.TranlsationX, configs.TranslationY, configs.TranslationZ);
 			Vector3 scaleVector = Vector3.one;

@@ -303,6 +303,15 @@ public class AvatarController : MonoBehaviour
 			}
 		}
 	}
+
+	private void LaunchFlickrAnimation(bool withNegativeEffect)
+	{
+		MaterialManager manager = GetComponentInChildren<MaterialManager> ();
+		if (null != manager) 
+		{
+			manager.LaunchFlickrAnimation(withNegativeEffect);
+		}
+	}
 	
 	// Moves the avatar in 3D space - pulls the tracked position of the user and applies it to root.
 	protected void MoveAvatar(Int64 UserID)
@@ -318,7 +327,7 @@ public class AvatarController : MonoBehaviour
 		if (!offsetCalibrated)
 		{
 			offsetCalibrated = true;
-			LaunchNegativeAnimation();
+			LaunchFlickrAnimation(true);
 
 			//xOffset = !mirroredMovement ? trans.x * moveRate : -trans.x * moveRate;
 			xOffset = mirroredMovement ? trans.x * moveRate : -trans.x * moveRate; //remove mirror for offset x node

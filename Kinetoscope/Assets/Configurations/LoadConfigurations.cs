@@ -27,7 +27,8 @@ public class LoadConfigurations : MonoBehaviour {
 
 	// initialization
 	void Start () {
-		INI_PATH = Application.dataPath.ToString() + "/Configs/kinetoscope.ini";
+		//INI_PATH = Application.dataPath.ToString() + "/Configs/kinetoscope.ini";
+		InitializePath ();
 		Camera.main.enabled = true;
 		errorText.enabled = false;
 		errorText.text = "";
@@ -47,6 +48,19 @@ public class LoadConfigurations : MonoBehaviour {
 		{
 			isConfigurationLoadingSuccess = true;
 		}
+	}
+
+	private void InitializePath ()
+	{
+		INI_PATH = Application.dataPath;
+		if (Application.platform == RuntimePlatform.OSXPlayer) {
+			INI_PATH += "/../../";
+		}
+		else
+			if (Application.platform == RuntimePlatform.WindowsPlayer) {
+				INI_PATH += "/../";
+			}
+		INI_PATH += "/Configs/kinetoscope.ini";
 	}
 
 	private void LoadCalibrationConfigs ()
