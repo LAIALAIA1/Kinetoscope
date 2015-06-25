@@ -291,6 +291,18 @@ public class AvatarController : MonoBehaviour
 		}
 		
 	}
+
+	private void LaunchNegativeAnimation()
+	{
+		MaterialManager[] managers = FindObjectsOfType<MaterialManager> () as MaterialManager[];
+		foreach (MaterialManager manager in managers) 
+		{
+			if(null != manager)
+			{
+				manager.LaunchNegativeMaterialAnimation(0.1f);
+			}
+		}
+	}
 	
 	// Moves the avatar in 3D space - pulls the tracked position of the user and applies it to root.
 	protected void MoveAvatar(Int64 UserID)
@@ -306,7 +318,7 @@ public class AvatarController : MonoBehaviour
 		if (!offsetCalibrated)
 		{
 			offsetCalibrated = true;
-			Camera.main.GetComponent<NegativeColorsMaterial>().InvertColorsForAWhile();
+			LaunchNegativeAnimation();
 
 			//xOffset = !mirroredMovement ? trans.x * moveRate : -trans.x * moveRate;
 			xOffset = mirroredMovement ? trans.x * moveRate : -trans.x * moveRate; //remove mirror for offset x node

@@ -151,6 +151,7 @@ public class KinectManager : MonoBehaviour
 	private PlaybackState actualPlaybackState = PlaybackState.None;
 	private float startWaitingTime = 0.0f;
 	private float lastPlayTime = 0.0f;
+	private bool isPlaybackStyleApplied = false;
 	private LoadConfigurations.Configurations configs = null;
 
 	public enum PlaybackState
@@ -1954,11 +1955,12 @@ public class KinectManager : MonoBehaviour
 	{
 		bool isSomeoneTracked = false;
 		for (int i = 0; i < bodyFrame.bodyData.Length; i++) {
-			if (bodyFrame.bodyData [i].bIsTracked != 0 && bodyFrame.bodyData [i].position.z > minUserDistance) {
+			if (bodyFrame.bodyData [i].bIsTracked != 0 && bodyFrame.bodyData [i].position.z > minUserDistance && bodyFrame.bodyData [i].position.z < maxUserDistance) {
 				resetIfRequired ();
 				startWaitingTime = Time.time;
 				actualPlaybackState = PlaybackState.Recording;
 				isSomeoneTracked = true;
+				ApplyStandardStyle();
 			}
 		}
 
@@ -1971,6 +1973,32 @@ public class KinectManager : MonoBehaviour
 			if(isPlaybackWaiting() && startWaitingTime + timeToWaitBeforePlayback < Time.time)
 			{
 				actualPlaybackState = PlaybackState.Playing;
+				ApplyPlaybackStyle ();
+			}
+		}
+	}
+
+	void ApplyPlaybackStyle ()
+	{
+		if (!isPlaybackStyleApplied) 
+		{
+			MaterialManager[] materialManagers = FindObjectsOfType(typeof(MaterialManager)) as MaterialManager[];
+			foreach (MaterialManager manager in materialManagers) {
+				manager.SetPlaybackMaterial ();
+				isPlaybackStyleApplied = true;
+			}
+		}
+	}
+
+	void ApplyStandardStyle ()
+	{
+		if (isPlaybackStyleApplied) 
+		{
+			MaterialManager[] materialManagers = FindObjectsOfType(typeof(MaterialManager)) as MaterialManager[];
+			foreach (MaterialManager manager in materialManagers) {
+				manager.SetStandardMaterial ();
+				isPlaybackStyleApplied = false;
+				Debug.Log("marc lavoine");
 			}
 		}
 	}

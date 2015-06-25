@@ -14,7 +14,6 @@ public class UpdateEyesPosition : MonoBehaviour {
 		if(null != manager)
 		{
 			transform.position = manager.GetObservatorPointOfView ();
-			transform.localScale.Set(manager.sensorAngle, 0f, 0f);
 		}
 	}
 

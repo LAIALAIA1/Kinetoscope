@@ -1,17 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class NetworkManager : MonoBehaviour {
 
 	public GameObject observatorEyes;
-	public GameObject networkedObservatorEyes;
+	public GameObject networkedObservatorEyes { get; set; }
+	public Text errorText;
 
 	private LoadConfigurations.Configurations configs = null;
 	private string ipAddress = "127.0.0.1";
 	private int port = 5555;
 	private bool isConnected = false;
 	private bool isObservatorInstantiated = false;
-	private readonly int NB_ATTEMPS = 30;
+	private readonly int NB_ATTEMPS = 10;
 	private int currentAttempt = 0;
 	private KinectManager manager;
 
@@ -34,12 +36,17 @@ public class NetworkManager : MonoBehaviour {
 
 	private IEnumerator ConnectionRoutine()
 	{
-		while (!isConnected) {
+		currentAttempt = 0;
+		while (!isConnected && currentAttempt < NB_ATTEMPS) {
 			Network.Connect(ipAddress,port);
 			Debug.Log("Trying to connect");
-			yield return new WaitForSeconds(2.0f);
+			yield return new WaitForSeconds(3.0f);
 			currentAttempt++;
-			if(currentAttempt > NB_ATTEMPS) break;
+		}
+
+		if (currentAttempt >= NB_ATTEMPS) 
+		{
+			StartCoroutine(ShowNetworkClientErrorMessage());
 		}
 	}
 	
@@ -63,6 +70,9 @@ public class NetworkManager : MonoBehaviour {
 		//The connection has been lost or closed
 		isConnected = false;
 		Destroy (observatorEyes);
+		isObservatorInstantiated = false;
+		if(!configs.isServer)
+			StartCoroutine (ConnectionRoutine ()); // try to connect again if client
 	}
 
 	private void InstanciateObservatorEyesGameObject ()
@@ -78,9 +88,13 @@ public class NetworkManager : MonoBehaviour {
 			isObservatorInstantiated = true;
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
 
+	private IEnumerator ShowNetworkClientErrorMessage()
+	{
+		errorText.enabled = true;
+		errorText.text = "Connexion to server failed ! ";
+		yield return new WaitForSeconds(10);
+		errorText.enabled = false;
 	}
+
 }

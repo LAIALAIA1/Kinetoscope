@@ -15,14 +15,13 @@ public class LoadConfigurations : MonoBehaviour {
 	private string INI_PATH = ""; //the ini file path called kinetoscope.ini
 	private readonly string CALIBRATION_SECTION = "calibration"; //calibration section string
 	private readonly string OBSERVATOR_SECTION = "observator"; //observator section string
-	private readonly string NETWORK_SECTION = "network";
-	private readonly string DOMAIN_SECTION = "domainconversion";
+	private readonly string NETWORK_SECTION = "network"; //network section string
+	private readonly string DOMAIN_SECTION = "domainconversion"; //domain conversion section string
 	private bool isCalibrationLoaded = false;
 	private bool isObservatorLoaded = false;
 	private bool isNetworkLoaded = true; // true because we're not forced to use network communication and there's no error if we don't want to
 	private bool isDomainConversionParamsLoaded = true;
 	private bool isConfigurationLoadingSuccess = false;
-	private float time = 0.0f;
 	private readonly float DISPLAY_TIME = 10.0f;
 
 
@@ -42,8 +41,7 @@ public class LoadConfigurations : MonoBehaviour {
 		LoadDomainConversionParams ();
 
 		if (!isCalibrationLoaded || !isObservatorLoaded || !isNetworkLoaded || !isDomainConversionParamsLoaded) {
-			errorText.enabled = true;
-			time = Time.time;
+			StartCoroutine(ShowErrorMessages());
 		} 
 		else 
 		{
@@ -130,12 +128,12 @@ public class LoadConfigurations : MonoBehaviour {
 		}
 	}
 	
-	void Update()
+	private IEnumerator ShowErrorMessages()
 	{
-		// if the message has been displayed DISPLAY_TIME seconds
-		if (Time.time - time > DISPLAY_TIME && errorText.enabled) {
-			errorText.enabled = false; //hide text message
-		}
+		errorText.enabled = true;
+		yield return new WaitForSeconds (DISPLAY_TIME);
+		errorText.enabled = false;
+		errorText.text = "";
 	}
 
 	public Configurations LoadedConfigs
