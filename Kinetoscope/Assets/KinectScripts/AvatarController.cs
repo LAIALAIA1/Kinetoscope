@@ -25,6 +25,9 @@ public class AvatarController : MonoBehaviour
 	
 	// Slerp smooth factor
 	public float smoothFactor = 5f;
+
+	//time before showing the avatar
+	public float timeBeforeVisible = 0.5f;
 	
 	// Offset node this transform is relative to, if any (optional)
 	public GameObject offsetNode;
@@ -312,6 +315,28 @@ public class AvatarController : MonoBehaviour
 			manager.LaunchFlickrAnimation(withNegativeEffect);
 		}
 	}
+
+	private void LaunchNewAvatarInField()
+	{
+		StartCoroutine (NewAvatarInFieldProcedure ());
+	}
+
+	private IEnumerator NewAvatarInFieldProcedure()
+	{
+		MaterialManager manager = GetComponentInChildren<MaterialManager> ();
+		if (null != manager) 
+		{
+			manager.LaunchHideForAWhile(timeBeforeVisible); //1 second is enough for hiding the slinding avatar
+			yield return new WaitForSeconds(timeBeforeVisible);
+			KinectManager kinectManager = Camera.main.GetComponent<KinectManager>() as KinectManager;
+			bool withNegativeEffect = true;
+			if(null != kinectManager)
+			{
+				withNegativeEffect = kinectManager.actualPlaybackState != KinectManager.PlaybackState.Playing;
+			}
+			LaunchFlickrAnimation(withNegativeEffect);
+		}
+	}
 	
 	// Moves the avatar in 3D space - pulls the tracked position of the user and applies it to root.
 	protected void MoveAvatar(Int64 UserID)
@@ -327,7 +352,7 @@ public class AvatarController : MonoBehaviour
 		if (!offsetCalibrated)
 		{
 			offsetCalibrated = true;
-			LaunchFlickrAnimation(true);
+			LaunchNewAvatarInField();
 
 			//xOffset = !mirroredMovement ? trans.x * moveRate : -trans.x * moveRate;
 			xOffset = mirroredMovement ? trans.x * moveRate : -trans.x * moveRate; //remove mirror for offset x node

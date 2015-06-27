@@ -146,12 +146,16 @@ public class KinectManager : MonoBehaviour
 	public bool enableReversePlayback = false;
 	public float timeToWaitBeforePlayback = 30.0f;
 	public float timeBetweenTwoPlayback = 3.0f;
+	public bool isTimeBetweenTwoPlaybackRandom = false;
+	public float minTimeBoundary = 5.0f;
+	public float maxTimeBoundary = 10.0f;
+	public PlaybackState actualPlaybackState { get; set;}
+
 	private int bodyFrameCount = 0;
 	private KinectInterop.BodyFrameData[] bodyFrameBuffer;
 	private bool isBodyFrameBufferInitialized = false;
 	private int incrementReaderIndexValue = -1; // start with -1 cause it's updated at first read
 	private int playBackStreamReaderIndex = 0;
-	private PlaybackState actualPlaybackState = PlaybackState.None;
 	private float startWaitingTime = 0.0f;
 	private float lastPlayTime = 0.0f;
 	private bool isPlaybackStyleApplied = false;
@@ -461,7 +465,6 @@ public class KinectManager : MonoBehaviour
 			if (meanCount > 0) 
 			{
 				ObservatorPointOfView.x *= -1; //mirrored x coordinate;
-				Debug.Log("MEAN COUNT: " + meanCount);
 				return ObservatorPointOfView /= meanCount;
 			}
 		} 
@@ -981,6 +984,7 @@ public class KinectManager : MonoBehaviour
 	public void initializeBodyFrameBuffer()
 	{
 		if (enablePlaybackMode) {
+			actualPlaybackState = PlaybackState.None;
 			bodyFrameBuffer = new KinectInterop.BodyFrameData[bodyFrameBufferSize];
 			isBodyFrameBufferInitialized = true;
 		}
@@ -2085,7 +2089,12 @@ public class KinectManager : MonoBehaviour
 					bodyFrame = bodyFrameBuffer [playBackStreamReaderIndex].clone();
 				}
 
-				if(playBackStreamReaderIndex == 0) lastPlayTime = Time.time;
+				if(playBackStreamReaderIndex == 0)
+				{
+					lastPlayTime = Time.time;
+					if(isTimeBetweenTwoPlaybackRandom)
+						timeBetweenTwoPlayback = UnityEngine.Random.Range(minTimeBoundary, maxTimeBoundary);
+				}
 			}
 		}
 

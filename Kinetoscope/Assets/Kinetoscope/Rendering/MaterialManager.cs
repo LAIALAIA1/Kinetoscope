@@ -8,9 +8,8 @@ public class MaterialManager : MonoBehaviour {
 	public Material negativeMaterial = null; // set from editor
 
 	private MaterialState materialState = MaterialState.Standard;
-	private readonly int NB_MIN_FLICKR = 8;
-	private readonly int NB_MAX_FLICKR = 16;
-	private readonly int LOOP_START = 5;
+	private readonly int NB_MIN_FLICKR = 2;
+	private readonly int NB_MAX_FLICKR = 3;
 
 	public void SetStandardMaterial()
 	{
@@ -97,18 +96,16 @@ public class MaterialManager : MonoBehaviour {
 		Random.seed = (int)Time.time; // seed the random generator
 		Renderer renderer = GetComponent<Renderer> ();
 		int nbOfFlickr = Random.Range (NB_MIN_FLICKR, NB_MAX_FLICKR) * 2;
-		float waitTime = 1e10f;
-		int loopCount = LOOP_START;
-		MaterialState matState = materialState;
+		float waitTime = 0f;
+		//MaterialState matState = materialState;
 		bool rendererState = false;
 
 		if (null != renderer) 
 		{
 			if(withNegative) SetNegativeMaterialToAll();
-			while(waitTime > Time.deltaTime && loopCount < nbOfFlickr)
+			for(int i = 0; i < nbOfFlickr; i++)
 			{
-				waitTime = Random.Range(FlickrTime(loopCount+1),FlickrTime(loopCount));
-				loopCount++;
+				waitTime = Random.Range(Time.deltaTime*2,Time.deltaTime*10);
 				yield return new WaitForSeconds(waitTime);
 				if(Random.value > 0.20f)
 				{
@@ -117,14 +114,25 @@ public class MaterialManager : MonoBehaviour {
 				renderer.enabled = rendererState;
 			}
 			renderer.enabled = true;
-			materialState = matState;
+			//materialState = matState;
 			SetRightMaterialToAll();
 		}
 	}
 
 	private float FlickrTime(float x)
 	{
-		return 1.0f / (x + 1E-3f); // never divided by 0
+		return 1.0f / (1.0f + x); // never divided by 0
+	}
+
+	private IEnumerator HideForAWhile(float time)
+	{
+		Renderer renderer = GetComponent<Renderer> ();
+		if (null != renderer) 
+		{
+			renderer.enabled = false;
+			yield return new WaitForSeconds (time);
+			renderer.enabled = true;
+		}
 	}
 
 	public void LaunchNegativeMaterialAnimation(float time)
@@ -135,6 +143,11 @@ public class MaterialManager : MonoBehaviour {
 	public void LaunchFlickrAnimation(bool withNegativeEffect)
 	{
 		StartCoroutine (FlickrAnimation (withNegativeEffect));
+	}
+
+	public void LaunchHideForAWhile(float time)
+	{
+		StartCoroutine (HideForAWhile (time));
 	}
 
 	public enum MaterialState
