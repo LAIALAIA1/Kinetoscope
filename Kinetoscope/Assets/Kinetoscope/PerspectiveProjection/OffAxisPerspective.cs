@@ -49,9 +49,6 @@ public class OffAxisPerspective : MonoBehaviour {
 			vb = pb - pe;
 			vc = pc - pe;
 
-			Debug.DrawRay(pe, va,Color.red);
-			Debug.DrawRay(pe, vb,Color.green);
-			Debug.DrawRay(pe, vc,Color.yellow);
 			
 			d = -Vector3.Dot(va,vn);
 			l = Vector3.Dot(vr, va) * n / d;
@@ -139,7 +136,6 @@ public class OffAxisPerspective : MonoBehaviour {
 				Quaternion q = Quaternion.identity;
 				//look at the center of the screen
 				q.SetLookRotation((0.5f * (pb + pc) - pe), vu);
-				Debug.DrawRay(pe, (0.5f * (pb + pc) - pe),Color.cyan);
 				//apply rotation
 				Camera.main.transform.rotation = q;
 				

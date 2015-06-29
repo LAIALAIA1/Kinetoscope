@@ -10,6 +10,7 @@ public class LogoDisplayer : MonoBehaviour {
 		// if texture has been set from editor (not null)
 		if (null != HEArcTexture) 
 		{
+			Debug.Log(HEArcTexture.height + "  " + HEArcTexture.width);
 			//draw it on left bottom corner of screen
 			GUI.DrawTexture(new Rect(10,Screen.height - HEArcTexture.height - 10,HEArcTexture.width,HEArcTexture.height),HEArcTexture);
 		}
