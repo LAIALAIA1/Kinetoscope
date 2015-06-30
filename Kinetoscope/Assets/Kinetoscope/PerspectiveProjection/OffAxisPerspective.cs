@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Create the projection  matrix for the camera according to a plane object (the screen)
+/// </summary>
 [ExecuteInEditMode]
 public class OffAxisPerspective : MonoBehaviour {
 	
-	public GameObject projectionScreen;
+	public GameObject projectionScreen; // the plane object that represent the screen : set from editor
 	public bool estimatedViewFrustum = true;
 	// Use this for initialization
 	void LateUpdate()

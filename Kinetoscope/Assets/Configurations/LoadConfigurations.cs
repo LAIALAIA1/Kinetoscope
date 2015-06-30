@@ -41,15 +41,19 @@ public class LoadConfigurations : MonoBehaviour {
 		LoadNetworkConfigs ();
 		LoadDomainConversionParams ();
 
+		// if something went wrong, display error message
 		if (!isCalibrationLoaded || !isObservatorLoaded || !isNetworkLoaded || !isDomainConversionParamsLoaded) {
 			StartCoroutine(ShowErrorMessages());
 		} 
 		else 
 		{
-			isConfigurationLoadingSuccess = true;
+			isConfigurationLoadingSuccess = true; //else loading successful
 		}
 	}
 
+	/// <summary>
+	/// Initializes the path variable with the good relative path.
+	/// </summary>
 	private void InitializePath ()
 	{
 		INI_PATH = Application.dataPath;
@@ -63,6 +67,9 @@ public class LoadConfigurations : MonoBehaviour {
 		INI_PATH += "/Configs/kinetoscope.ini";
 	}
 
+	/// <summary>
+	/// Loads the calibration configs.
+	/// </summary>
 	private void LoadCalibrationConfigs ()
 	{
 		float screenWidth = 0, screenHeight = 0, screenCenterX = 0, screenCentery = 0, screenCenterZ = 0;
@@ -82,6 +89,9 @@ public class LoadConfigurations : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Loads the observator configs.
+	/// </summary>
 	private void LoadObservatorConfigs ()
 	{
 		float observatorX = 0, observatorY = 0, observatorZ = 0;
@@ -95,6 +105,9 @@ public class LoadConfigurations : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Loads the network configs.
+	/// </summary>
 	private void LoadNetworkConfigs()
 	{
 		int isNetworkEnabled = 0;
@@ -121,6 +134,9 @@ public class LoadConfigurations : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Loads the domain conversion parameters.
+	/// </summary>
 	private void LoadDomainConversionParams ()
 	{
 		if (isNetworkLoaded) 
@@ -141,7 +157,11 @@ public class LoadConfigurations : MonoBehaviour {
 			}
 		}
 	}
-	
+
+	/// <summary>
+	/// Shows the error messages.
+	/// </summary>
+	/// <returns>The error messages.</returns>
 	private IEnumerator ShowErrorMessages()
 	{
 		errorText.enabled = true;
@@ -150,6 +170,10 @@ public class LoadConfigurations : MonoBehaviour {
 		errorText.text = "";
 	}
 
+	/// <summary>
+	/// The loaded configs property.
+	/// </summary>
+	/// <value>The loaded configs.</value>
 	public Configurations LoadedConfigs
 	{
 		get{
@@ -169,6 +193,9 @@ public class LoadConfigurations : MonoBehaviour {
 	}
 
 
+	///
+	/// class that contain the values of configurations
+	///
 	public class Configurations
 	{
 		public Vector3 ObservatorPosition { get; set; }
