@@ -166,6 +166,10 @@ public class KinectManager : MonoBehaviour
 		Recording,Waiting,Playing, None
 	}
 
+
+	// Network eyes pos offset
+	private readonly float EYES_OFFSET_Y = -0.07f;
+	private readonly float EYES_OFFSET_Z = -0.08f;
 	
 	// List of all users
 	private List<Int64> alUserIds;
@@ -450,15 +454,19 @@ public class KinectManager : MonoBehaviour
 		if (actualPlaybackState != PlaybackState.Playing) 
 		{
 			Vector3 ObservatorPointOfView = Vector3.zero;
+			Vector3 tmpPointOfView = Vector3.zero;
 			KinectInterop.BodyData bodyData;
 			int meanCount = 0;
 			for (int i = 0; i < sensorData.bodyCount; i++) 
 			{
 				bodyData = bodyFrame.bodyData [i];
 				KinectInterop.JointData head = bodyData.joint [(int)KinectInterop.JointType.Head];
-				if (head.trackingState == KinectInterop.TrackingState.Tracked && head.position.z > minUserDistance
+				if (bodyData.bIsTracked != 0 && head.position.z > minUserDistance
 				    && head.position.z < maxUserDistance && Mathf.Abs(head.position.x) < maxUserXDeporting) {
-					ObservatorPointOfView += bodyData.joint [(int)KinectInterop.JointType.Head].position;
+					tmpPointOfView = bodyData.joint [(int)KinectInterop.JointType.Head].position;
+					tmpPointOfView.y += EYES_OFFSET_Y;
+					tmpPointOfView.z += EYES_OFFSET_Z;
+					ObservatorPointOfView += tmpPointOfView;
 					meanCount++;
 				}
 			}

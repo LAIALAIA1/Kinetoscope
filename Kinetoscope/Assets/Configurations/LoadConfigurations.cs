@@ -49,6 +49,9 @@ public class LoadConfigurations : MonoBehaviour {
 		{
 			isConfigurationLoadingSuccess = true; //else loading successful
 		}
+
+		//hide mouse cursor
+		Cursor.visible = false;
 	}
 
 	/// <summary>
