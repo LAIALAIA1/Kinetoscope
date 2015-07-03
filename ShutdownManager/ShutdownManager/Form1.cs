@@ -36,7 +36,8 @@ namespace ShutdownManager
 
         private void handleNewBatteryState()
         {
-            if ((SystemInformation.PowerStatus.BatteryChargeStatus & BatteryChargeStatus.Charging) == BatteryChargeStatus.Charging)
+            //If the AC is plugged in
+            if (SystemInformation.PowerStatus.PowerLineStatus == PowerLineStatus.Online)
             {
                 lblBatteryState.Text = "Charging, AC plugged";
                 resetShutdownTimer();
@@ -46,7 +47,6 @@ namespace ShutdownManager
                 lblBatteryState.Text = "Discharging, AC unplugged";
                 launchShutdownTimer();
             }
-            label1.Text = SystemInformation.PowerStatus.BatteryChargeStatus.ToString();
         }
 
         private void launchShutdownTimer()
