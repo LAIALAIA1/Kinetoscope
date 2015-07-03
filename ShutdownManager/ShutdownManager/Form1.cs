@@ -46,6 +46,7 @@ namespace ShutdownManager
                 lblBatteryState.Text = "Discharging, AC unplugged";
                 launchShutdownTimer();
             }
+            label1.Text = SystemInformation.PowerStatus.BatteryChargeStatus.ToString();
         }
 
         private void launchShutdownTimer()
