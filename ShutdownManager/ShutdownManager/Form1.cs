@@ -26,6 +26,7 @@ namespace ShutdownManager
             this.WindowState = FormWindowState.Minimized;
             SystemEvents.PowerModeChanged += new PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
             handleNewBatteryState();
+            numTimeBeforeShutdown.Value = (int)Properties.Settings.Default.SecToWait;
         }
 
         private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
@@ -77,6 +78,8 @@ namespace ShutdownManager
         private void numTimeBeforeShutdown_ValueChanged(object sender, EventArgs e)
         {
             elapsedTimeSinceNotCharging = 0;
+            Properties.Settings.Default.SecToWait = (int)numTimeBeforeShutdown.Value;
+            Properties.Settings.Default.Save();
         }
     }
 }
