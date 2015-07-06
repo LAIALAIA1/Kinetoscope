@@ -52,7 +52,8 @@ public class KinectManager : MonoBehaviour
 	// Maximum user distance, if any. 0 means no max-distance limitation
 	public float maxUserDistance = 0f;
 
-	public float maxUserXDeporting = 0f;
+	public float maxUserXDeporting = 0f; // user max x position for eye tracking
+	
 
 
 	// Maximum number of users allowed to be tracked
@@ -142,17 +143,21 @@ public class KinectManager : MonoBehaviour
 
 	//playback attributes
 	public bool enablePlaybackMode = false;
-	public int bodyFrameBufferSize = 10000;
+	public int bodyFrameBufferSize = 1000;
 	public bool enableReversePlayback = false;
 	public float timeToWaitBeforePlayback = 30.0f;
 	public float timeBetweenTwoPlayback = 3.0f;
 	public bool isTimeBetweenTwoPlaybackRandom = false;
 	public float minTimeBoundary = 5.0f;
 	public float maxTimeBoundary = 10.0f;
+	public float maxUserXDeportingForPlayback = 0f;
 	public PlaybackState actualPlaybackState { get; set;}
 
 	private int bodyFrameCount = 0;
+	private int tmpBodyFrameCount = 0;
+	private KinectInterop.BodyFrameData[] tmpBodyFrameBuffer;
 	private KinectInterop.BodyFrameData[] bodyFrameBuffer;
+	private bool isAPlaybackRecorded = false;
 	private bool isBodyFrameBufferInitialized = false;
 	private int incrementReaderIndexValue = -1; // start with -1 cause it's updated at first read
 	private int playBackStreamReaderIndex = 0;
@@ -161,9 +166,12 @@ public class KinectManager : MonoBehaviour
 	private bool isPlaybackStyleApplied = false;
 	private LoadConfigurations.Configurations configs = null;
 
+	///
+	/// state of the playback module
+	///
 	public enum PlaybackState
 	{
-		Recording,Waiting,Playing, None
+		Recording, Waiting, Playing, None
 	}
 
 
@@ -994,6 +1002,7 @@ public class KinectManager : MonoBehaviour
 		if (enablePlaybackMode) {
 			actualPlaybackState = PlaybackState.None;
 			bodyFrameBuffer = new KinectInterop.BodyFrameData[bodyFrameBufferSize];
+			tmpBodyFrameBuffer = new KinectInterop.BodyFrameData[bodyFrameBufferSize];
 			isBodyFrameBufferInitialized = true;
 		}
 	}
@@ -1973,7 +1982,9 @@ public class KinectManager : MonoBehaviour
 	{
 		bool isSomeoneTracked = false;
 		for (int i = 0; i < bodyFrame.bodyData.Length; i++) {
-			if (bodyFrame.bodyData [i].bIsTracked != 0 && bodyFrame.bodyData [i].position.z > minUserDistance && bodyFrame.bodyData [i].position.z < maxUserDistance) {
+			// if some user is tracked and in detection range
+			if (bodyFrame.bodyData [i].bIsTracked != 0 && bodyFrame.bodyData [i].position.z > minUserDistance 
+			    && bodyFrame.bodyData [i].position.z < maxUserDistance && Mathf.Abs(bodyFrame.bodyData[i].position.x) < maxUserXDeporting) {
 				resetIfRequired ();
 				startWaitingTime = Time.time;
 				actualPlaybackState = PlaybackState.Recording;
@@ -1986,6 +1997,15 @@ public class KinectManager : MonoBehaviour
 			if(isPlaybackRecording() && !isSomeoneTracked)
 			{
 				actualPlaybackState = PlaybackState.Waiting;
+				if(tmpBodyFrameCount >= bodyFrameBufferSize - 1 || !isAPlaybackRecorded)
+				{
+					bodyFrameCount = tmpBodyFrameCount;
+					isAPlaybackRecorded = true;
+					for(int i = 0; i < bodyFrameCount; i++)
+					{
+						bodyFrameBuffer[i] = tmpBodyFrameBuffer[i].clone();
+					}
+				}
 			}
 
 			if(isPlaybackWaiting() && startWaitingTime + timeToWaitBeforePlayback < Time.time)
@@ -1996,7 +2016,19 @@ public class KinectManager : MonoBehaviour
 		}
 	}
 
-	void ApplyPlaybackStyle ()
+	private bool isSomeoneInRangeForPlayback ()
+	{
+		for (int i = 0; i < bodyFrame.bodyData.Length; i++) {
+			// if some user is tracked and in detection range
+			if (bodyFrame.bodyData [i].bIsTracked != 0 && bodyFrame.bodyData [i].position.z > minUserDistance 
+			    && bodyFrame.bodyData [i].position.z < maxUserDistance && Mathf.Abs(bodyFrame.bodyData[i].position.x) < maxUserXDeportingForPlayback) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void ApplyPlaybackStyle ()
 	{
 		if (!isPlaybackStyleApplied) 
 		{
@@ -2008,7 +2040,10 @@ public class KinectManager : MonoBehaviour
 		}
 	}
 
-	void ApplyStandardStyle ()
+	/// <summary>
+	/// Applies the standard style to all skeletons.
+	/// </summary>
+	private void ApplyStandardStyle ()
 	{
 		if (isPlaybackStyleApplied) 
 		{
@@ -2020,25 +2055,40 @@ public class KinectManager : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// Resets playback module state and buffer's indexes if required.
+	/// </summary>
 	private void resetIfRequired ()
 	{
 		if (!isPlaybackRecording ()) {
-			bodyFrameCount = 0;
+			tmpBodyFrameCount = 0;
 			playBackStreamReaderIndex = 0;
 			incrementReaderIndexValue = -1;
 		}
 	}
 
+	/// <summary>
+	/// Is the playback playing.
+	/// </summary>
+	/// <returns><c>true</c>, if playback is playing, <c>false</c> otherwise.</returns>
 	private bool isPlaybackPlaying()
 	{
 		return actualPlaybackState == PlaybackState.Playing;
 	}
 
+	/// <summary>
+	/// Is the playback recording.
+	/// </summary>
+	/// <returns><c>true</c>, if playback is recording, <c>false</c> otherwise.</returns>
 	private bool isPlaybackRecording()
 	{
 		return actualPlaybackState == PlaybackState.Recording;
 	}
 
+	/// <summary>
+	/// Is the playback waiting.
+	/// </summary>
+	/// <returns><c>true</c>, if playback is waiting, <c>false</c> otherwise.</returns>
 	private bool isPlaybackWaiting()
 	{
 		return actualPlaybackState == PlaybackState.Waiting;
@@ -2092,7 +2142,9 @@ public class KinectManager : MonoBehaviour
 				}
 				else
 				{
-					if(playBackStreamReaderIndex % (bodyFrameCount - 1) == 0) incrementReaderIndexValue *= -1;
+					if(playBackStreamReaderIndex % (bodyFrameCount - 1) == 0)
+					{incrementReaderIndexValue *= -1;
+					}
 					playBackStreamReaderIndex += incrementReaderIndexValue;
 					bodyFrame = bodyFrameBuffer [playBackStreamReaderIndex].clone();
 				}
@@ -2352,10 +2404,10 @@ public class KinectManager : MonoBehaviour
 			}
 		}
 
-		if (isPlaybackRecording() && bodyFrameCount < (bodyFrameBufferSize - 1) && enablePlaybackMode) {
-			bodyFrameBuffer [bodyFrameCount] = bodyFrame.clone();
-			bodyFrameCount++;
-		} 
+		if (isPlaybackRecording () && tmpBodyFrameCount < (bodyFrameBufferSize - 1) && enablePlaybackMode && isSomeoneInRangeForPlayback ()) {
+			tmpBodyFrameBuffer [tmpBodyFrameCount] = bodyFrame.clone ();
+			tmpBodyFrameCount++;
+		}
 
 
 		// remove the lost users if any

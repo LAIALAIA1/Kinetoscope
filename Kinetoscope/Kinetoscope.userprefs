@@ -1,16 +1,18 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Configurations\LoadConfigurations.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\KinectScripts\KinectManager.cs">
     <Files>
-      <File FileName="Assets\Kinetoscope\PerspectiveProjection\OffAxisPerspective.cs" Line="11" Column="42" />
-      <File FileName="Assets\KinectScripts\KinectManager.cs" Line="451" Column="24" />
+      <File FileName="Assets\KinectScripts\KinectManager.cs" Line="2409" Column="6" />
+      <File FileName="Assets\Kinetoscope\PerspectiveProjection\OffAxisPerspective.cs" Line="1" Column="1" />
       <File FileName="Assets\LogoDisplayer.cs" Line="1" Column="1" />
       <File FileName="Assets\Kinetoscope\Rendering\MaterialManager.cs" Line="1" Column="1" />
       <File FileName="Assets\Network\NetworkManager.cs" Line="1" Column="1" />
       <File FileName="Assets\Kinetoscope\Observator\UpdateCameraPosition.cs" Line="1" Column="1" />
       <File FileName="Assets\Kinetoscope\Observator\UpdateEyesPosition.cs" Line="1" Column="1" />
-      <File FileName="Assets\Configurations\LoadConfigurations.cs" Line="54" Column="26" />
+      <File FileName="Assets\Configurations\LoadConfigurations.cs" Line="1" Column="1" />
       <File FileName="Assets\KinectScripts\AvatarController.cs" Line="1" Column="1" />
+      <File FileName="Assets\KinectScripts\Interfaces\Kinect2Interface.cs" Line="552" Column="1" />
+      <File FileName="Assets\KinectScripts\KinectInterop.cs" Line="480" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
