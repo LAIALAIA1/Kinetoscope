@@ -54,7 +54,6 @@
      <Compile Include="Assets\KinectScripts\FacetrackingManager.cs" />
      <Compile Include="Assets\KinectScripts\Filters\BoneOrientationsConstraint.cs" />
      <Compile Include="Assets\KinectScripts\Filters\JointPositionsFilter.cs" />
-     <Compile Include="Assets\KinectScripts\InteractionManager.cs" />
      <Compile Include="Assets\KinectScripts\Interfaces\DepthSensorInterface.cs" />
      <Compile Include="Assets\KinectScripts\Interfaces\Kinect1Interface.cs" />
      <Compile Include="Assets\KinectScripts\Interfaces\Kinect2Interface.cs" />
@@ -63,36 +62,22 @@
      <Compile Include="Assets\KinectScripts\KinectInterop.cs" />
      <Compile Include="Assets\KinectScripts\KinectManager.cs" />
      <Compile Include="Assets\KinectScripts\Samples\FollowUserRotation.cs" />
-     <Compile Include="Assets\KinectScripts\Samples\GetFacePointsDemo.cs" />
      <Compile Include="Assets\KinectScripts\Samples\GetJointPositionDemo.cs" />
      <Compile Include="Assets\KinectScripts\Samples\JointOrientationView.cs" />
      <Compile Include="Assets\KinectScripts\Samples\JointPositionView.cs" />
-     <Compile Include="Assets\KinectScripts\Samples\MouseControl.cs" />
      <Compile Include="Assets\KinectScripts\Samples\PointCloudView.cs" />
-     <Compile Include="Assets\KinectScripts\Samples\SimpleBackgroundRemoval.cs" />
-     <Compile Include="Assets\KinectScripts\Samples\SimpleGestureListener.cs" />
-     <Compile Include="Assets\KinectScripts\Samples\SimpleVisualGestureListener.cs" />
      <Compile Include="Assets\KinectScripts\SpeechErrorHandler.cs" />
      <Compile Include="Assets\KinectScripts\SpeechManager.cs" />
-     <Compile Include="Assets\KinectScripts\VisualGestureManager.cs" />
      <Compile Include="Assets\Kinetoscope\Observator\UpdateCameraPosition.cs" />
      <Compile Include="Assets\Kinetoscope\Observator\UpdateEyesPosition.cs" />
      <Compile Include="Assets\Kinetoscope\PerspectiveProjection\OffAxisPerspective.cs" />
      <Compile Include="Assets\Kinetoscope\Rendering\MaterialManager.cs" />
      <Compile Include="Assets\LogoDisplayer.cs" />
      <Compile Include="Assets\Network\NetworkManager.cs" />
-     <None Include="Assets\Resources\BlurShader.shader" />
      <None Include="Assets\ToonShading\Shaders\ToonyShader.shader" />
-     <None Include="Assets\Resources\SpeechGrammar.grxml.txt" />
      <None Include="Assets\ToonShading\Shaders\TransparentSingleColor.shader" />
-     <None Include="Assets\Resources\Color2DepthShader.shader" />
      <None Include="Assets\ToonShading\Shaders\TSFOutline.shader" />
-     <None Include="Assets\Resources\Depth2ColorShader.shader" />
-     <None Include="Assets\Resources\DepthShader.shader" />
      <None Include="Assets\ToonShading\Shaders\TSF.shader" />
-     <None Include="Assets\Resources\Erode.shader" />
-     <None Include="Assets\Resources\BodyShader.shader" />
-     <None Include="Assets\Resources\Dilate.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

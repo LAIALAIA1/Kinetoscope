@@ -48,18 +48,10 @@
   <ItemGroup>
      <Compile Include="Assets\Standard Assets\Editor\KinectCopyPluginDataHelper.cs" />
      <Compile Include="Assets\Standard Assets\Editor\KinectFacePostBuildCopyPluginData.cs" />
-     <None Include="Assets\Resources\BlurShader.shader" />
      <None Include="Assets\ToonShading\Shaders\ToonyShader.shader" />
-     <None Include="Assets\Resources\SpeechGrammar.grxml.txt" />
      <None Include="Assets\ToonShading\Shaders\TransparentSingleColor.shader" />
-     <None Include="Assets\Resources\Color2DepthShader.shader" />
      <None Include="Assets\ToonShading\Shaders\TSFOutline.shader" />
-     <None Include="Assets\Resources\Depth2ColorShader.shader" />
-     <None Include="Assets\Resources\DepthShader.shader" />
      <None Include="Assets\ToonShading\Shaders\TSF.shader" />
-     <None Include="Assets\Resources\Erode.shader" />
-     <None Include="Assets\Resources\BodyShader.shader" />
-     <None Include="Assets\Resources\Dilate.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
