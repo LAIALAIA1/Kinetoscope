@@ -1,4 +1,4 @@
-# xvision
+# Kinetoscope
 My graduation project for NIFFF 2015
 
 For the passed few years the Haute Ecole Arc of Neuchatel sets up an interactive
