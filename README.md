@@ -10,9 +10,12 @@ Kinetoscope is a project designed and imagined by Manuel Schmalstieg (http://ms-
 See below some photos of Kinetocope during the NIFFF opening cocktail.
 
 ![Me Behind the kinetoscope @ NIFFF](http://www.nifff.ch/2015/media/image/2015/photos-portraits-cocktails/nifff-photos-0307-photocall-rebeccabowring-44-logo-web.jpg)
+
 Me behind Kinetoscope
 
+
 ![Manuel Behind the kinetoscope @ NIFFF](http://www.nifff.ch/2015/media/image/2015/photos-portraits-cocktails/nifff-photos-0307-photocall-rebeccabowring-2-logo-web0.jpg)
+
 Manuel behind Kinetoscope
 
 More pictures available here http://www.nifff.ch/2015/site/fr/nifff-en-images/photos/galerie-2015/cocktail-portraits
