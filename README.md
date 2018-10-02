@@ -17,5 +17,3 @@ Manuel behind Kinetoscope
 
 ![Manuel Behind the kinetoscope @ NIFFF](http://www.nifff.ch/2015/media/image/2015/photos-portraits-cocktails/nifff-photos-0307-photocall-rebeccabowring-2-logo-web0.jpg)
 
-More pictures available here http://www.nifff.ch/2015/site/fr/nifff-en-images/photos/galerie-2015/cocktail-portraits
-
